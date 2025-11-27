@@ -36,6 +36,12 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
+:: Conda paketleri için SINIRSIZ yeniden deneme döngüsü
+set conda_success=0
+set conda_attempt=1
+
+:retry_conda
+echo 🔄 Conda paketleri yükleniyor (Deneme !conda_attempt!)...
 conda install -y -c conda-forge -c pytorch -c nvidia ^
     python=3.10 ^
     pytorch=2.1.2 ^
@@ -49,11 +55,25 @@ conda install -y -c conda-forge -c pytorch -c nvidia ^
     jupyter=1.0.0 ^
     pip=23.3.1
 
-echo ✅ Conda paketleri yüklendi
+if %errorlevel% equ 0 (
+    set conda_success=1
+    echo ✅ Conda paketleri başarıyla yüklendi
+) else (
+    echo ❌ Conda paket yükleme hatası (Deneme !conda_attempt!), 15 saniye sonra yeniden denenecek...
+    set /a conda_attempt+=1
+    timeout /t 15 /nobreak >nul
+    goto retry_conda
+)
 
 echo [4/6] Pip paketleri yükleniyor...
 pip install --upgrade pip
 
+:: Pip paketleri için SINIRSIZ yeniden deneme döngüsü
+set pip_success=0
+set pip_attempt=1
+
+:retry_pip
+echo 🔄 Pip paketleri yükleniyor (Deneme !pip_attempt!)...
 pip install -U ^
     transformers==4.36.2 ^
     datasets==2.15.0 ^
@@ -72,7 +92,15 @@ pip install -U ^
     beautifulsoup4==4.12.2 ^
     html2text==2020.1.16
 
-echo ✅ Pip paketleri yüklendi
+if %errorlevel% equ 0 (
+    set pip_success=1
+    echo ✅ Pip paketleri başarıyla yüklendi
+) else (
+    echo ❌ Pip paket yükleme hatası (Deneme !pip_attempt!), 10 saniye sonra yeniden denenecek...
+    set /a pip_attempt+=1
+    timeout /t 10 /nobreak >nul
+    goto retry_pip
+)
 
 echo [5/6] Dizin yapısı oluşturuluyor...
 if not exist "data\raw" mkdir data\raw
@@ -110,6 +138,10 @@ echo.
 echo ==================================================
 echo    KURULUM BAŞARIYLA TAMAMLANDI! 🎉
 echo ==================================================
+echo.
+echo 📊 İstatistikler:
+echo    Conda deneme sayısı: !conda_attempt!
+echo    Pip deneme sayısı: !pip_attempt!
 echo.
 echo 🚀 HERMES'i başlatmak için:
 echo    conda activate ai-env
