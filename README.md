@@ -460,4 +460,13 @@ html2text>=2020.1.16
 6. **Veri kaynaklarınızı belirleyin**
 7. **Eğitimi başlatın!**
 
+
 Bu kurulum, HERMES Ultimate V15.0'ı tam fonksiyonlu olarak çalıştıracak ve tüm gelişmiş özellikleri kullanmanıza olanak sağlayacaktır! 🎉
+
+## ☕ Destek Olun / Support
+
+Projemi beğendiyseniz, bana bir kahve ısmarlayarak destek olabilirsiniz!
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/metatronslove)
+
+Teşekkürler! 🙏
